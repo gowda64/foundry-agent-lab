@@ -12,9 +12,11 @@ The goal is not to create a different application. The goal is to reproduce the 
 ## Contents
 
 - [Prerequisites](#prerequisites)
+- [If you get stuck](#if-you-get-stuck)
 - [Foundry-first data model](#foundry-first-data-model)
 - [Upload the seed data](#upload-the-seed-data)
 - [Included data](#included-data)
+- [Implementation map](#implementation-map)
 - [Iteration 1 — Grounded Advisor in code](#iteration-1--grounded-advisor-in-code)
 - [Iteration 2 — First Workflow in code](#iteration-2--first-workflow-in-code)
 - [Iteration 3 — Full System in code](#iteration-3--full-system-in-code)
@@ -47,7 +49,69 @@ cp .env.example .env
 # edit .env with your Foundry project endpoint, knowledge base, deployments, and tool names
 ```
 
-> The Microsoft Agent Framework Python package is `agent-framework`, and the Foundry provider package is `agent-framework-foundry`.
+> The Microsoft Agent Framework Python package for Foundry-backed Python samples is `agent-framework-foundry`.
+
+## If you get stuck
+
+Use these official docs and open-source samples while filling in the TODOs:
+
+| Need | Link |
+|---|---|
+| Agent Framework overview | [Microsoft Learn — Agent Framework overview](https://learn.microsoft.com/en-us/agent-framework/overview/) |
+| Microsoft Foundry model provider | [Microsoft Learn — Microsoft Foundry provider](https://learn.microsoft.com/en-us/agent-framework/integrations/by-component/model-providers/microsoft-foundry) |
+| Tool concepts and provider support | [Microsoft Learn — Tools overview](https://learn.microsoft.com/en-us/agent-framework/agents/tools/) |
+| Main open-source repository | [microsoft/agent-framework](https://github.com/microsoft/agent-framework) |
+| Python sample index | [Python get-started samples](https://github.com/microsoft/agent-framework/tree/main/python/samples/01-get-started) |
+| First Foundry-backed agent | [01_hello_agent.py](https://github.com/microsoft/agent-framework/blob/main/python/samples/01-get-started/01_hello_agent.py) |
+| Function tools with `@tool` | [02_add_tools.py](https://github.com/microsoft/agent-framework/blob/main/python/samples/01-get-started/02_add_tools.py) |
+| Functional workflow with agents | [05_functional_workflow_with_agents.py](https://github.com/microsoft/agent-framework/blob/main/python/samples/01-get-started/05_functional_workflow_with_agents.py) |
+| Graph workflow pattern | [07_first_graph_workflow.py](https://github.com/microsoft/agent-framework/blob/main/python/samples/01-get-started/07_first_graph_workflow.py) |
+
+SDK hints used in this lab:
+
+```python
+from agent_framework import Agent
+from agent_framework.foundry import FoundryChatClient
+from azure.identity import AzureCliCredential
+
+client = FoundryChatClient(
+    project_endpoint=os.environ["FOUNDRY_PROJECT_ENDPOINT"],
+    model=os.environ["LARGE_MODEL_DEPLOYMENT"],
+    credential=AzureCliCredential(),
+)
+
+agent = Agent(
+    client=client,
+    name="Response Writer Agent",
+    instructions="...",
+)
+
+result = await agent.run("...")
+```
+
+For app-owned function tools, the open-source samples show this shape:
+
+```python
+from typing import Annotated
+from agent_framework import Agent, tool
+from pydantic import Field
+
+@tool(approval_mode="never_require")
+def order_lookup_tool(
+    order_id: Annotated[str, Field(description="Contoso order ID, e.g. CR-10432")],
+) -> dict:
+    """Look up order facts from the approved order system."""
+    ...
+
+agent = Agent(
+    client=client,
+    name="Order Lookup Agent",
+    instructions="Use the order_lookup_tool. Never fabricate orders.",
+    tools=[order_lookup_tool],
+)
+```
+
+> For production, use approval where financial or irreversible actions are involved. The sample `approval_mode="never_require"` is only convenient for read-only demo tools.
 
 ## Foundry-first data model
 
@@ -91,6 +155,17 @@ The repo already includes the fabricated Contoso lab data in [`../data/`](../dat
 
 Use these to configure Foundry IQ / Foundry tools. Do not treat them as runtime databases in the pro-code implementation.
 
+## Implementation map
+
+| File | What to implement |
+|---|---|
+| [`src/contoso_lab/foundry_client.py`](./src/contoso_lab/foundry_client.py) | Main TODO file. Wire Agent Framework, Foundry IQ, Foundry tools, and JSON parsing here. |
+| [`src/contoso_lab/iteration1_grounded_advisor.py`](./src/contoso_lab/iteration1_grounded_advisor.py) | Single-agent orchestration wrapper. Usually no changes except swapping client behaviour. |
+| [`src/contoso_lab/iteration2_first_workflow.py`](./src/contoso_lab/iteration2_first_workflow.py) | Sequential workflow: Intake → Policy → Response Writer. |
+| [`src/contoso_lab/iteration3_full_system.py`](./src/contoso_lab/iteration3_full_system.py) | Concurrent fan-out/fan-in: Order, Policy, History → Resolution → Approval → Writer. |
+| [`src/contoso_lab/models.py`](./src/contoso_lab/models.py) | Typed JSON contracts. Keep these strict. Change prompts/tools if validation fails. |
+| [`prompts/`](./prompts/) | Agent instructions copied from the lab. Keep portal and pro-code prompts aligned. |
+
 ## Iteration 1 — Grounded Advisor in code
 
 Portal equivalent: [Iteration 1 — The Grounded Advisor](../LAB-contoso-agent-workflow_Version3.md#iteration-1--the-grounded-advisor).
@@ -110,7 +185,7 @@ Knowledge source setup:
 
 What to write:
 
-1. Implement the `FoundryAgentClient._run_agent(...)` adapter in [`foundry_client.py`](./src/contoso_lab/foundry_client.py).
+1. Implement the `_run_agent(...)` TODO in [`FoundryAgentClient`](./src/contoso_lab/foundry_client.py).
 2. Create one Foundry-backed Agent Framework agent using the large model.
 3. Configure that agent to use the Foundry IQ / knowledge sources above.
 4. Send one complaint at a time from [`sample-complaints.md`](../data/sample-complaints.md).
