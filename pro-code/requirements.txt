@@ -1,4 +1,5 @@
 agent-framework
+agent-framework-foundry
 azure-identity
 python-dotenv
 pydantic>=2

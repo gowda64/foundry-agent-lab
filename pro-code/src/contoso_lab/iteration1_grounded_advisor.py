@@ -1,30 +1,46 @@
 from __future__ import annotations
 
+import re
+
 from .config import get_settings
 from .data_sources import read_text
-from .iteration2_first_workflow import run_intake, run_policy, run_response_writer
+from .foundry_client import ContosoFoundryClient, FoundryAgentClient
+
+_CUSTOMER_ID = re.compile(r"customerId:\s*(?P<customer_id>\S+)", re.IGNORECASE)
+_ORDER_ID = re.compile(r"\bCR-\d{5}\b")
 
 
-async def run_iteration1(complaint_text: str) -> str:
-    """Run the single-agent Grounded Advisor local reference flow.
+def extract_customer_id(text: str) -> str | None:
+    match = _CUSTOMER_ID.search(text)
+    return match.group("customer_id") if match else None
 
-    This keeps the lab executable before learners wire in Microsoft Agent
-    Framework. The policy and tone guide are loaded to verify required files are
-    present; the deterministic advisor logic reuses the Iteration 2 components so
-    the same contracts are exercised locally.
+
+def extract_order_id(text: str) -> str | None:
+    match = _ORDER_ID.search(text)
+    return match.group(0) if match else None
+
+
+def default_client() -> ContosoFoundryClient:
+    return FoundryAgentClient(get_settings())
+
+
+async def run_iteration1(complaint_text: str, client: ContosoFoundryClient | None = None) -> str:
+    """Run the single-agent Grounded Advisor through Foundry-hosted agents.
+
+    Local files are loaded only to verify seed prompts/data exist for the lab. The
+    actual policy and tone retrieval should come from Foundry IQ / agent knowledge.
     """
     settings = get_settings()
-    prompt = read_text(settings.prompts_dir / "complaint_advisor.md")
-    returns_policy = read_text(settings.data_dir / "returns-policy.md")
-    tone_guide = read_text(settings.data_dir / "tone-of-voice.md")
+    _ = read_text(settings.prompts_dir / "complaint_advisor.md")
+    _ = read_text(settings.data_dir / "returns-policy.md")
+    _ = read_text(settings.data_dir / "tone-of-voice.md")
 
-    _ = (prompt, returns_policy, tone_guide)
-    intake = await run_intake(complaint_text)
-    policy_finding = await run_policy(intake)
+    active_client = client or default_client()
+    intake = await active_client.run_intake(complaint_text)
+    policy_finding = await active_client.run_policy(intake)
     if "POLICY_UNCLEAR" in policy_finding.reasoning:
         return f"STEP 1 — UNDERSTAND\n{intake.summary}\n\nSTEP 2 — POLICY VERDICT\n{policy_finding.reasoning}"
-
-    draft = await run_response_writer(intake, policy_finding)
+    draft = await active_client.write_response(intake, policy_finding)
     approval_line = "\n⚠️ MANAGER APPROVAL REQUIRED before sending.\n" if policy_finding.requiresManagerApproval else "\n"
     return (
         "STEP 1 — UNDERSTAND\n"

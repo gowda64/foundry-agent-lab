@@ -19,6 +19,7 @@ Sentiment = Literal["calm", "frustrated", "angry"]
 Confidence = Literal["high", "medium", "low"]
 Remedy = Literal["refund", "replacement", "repair", "store_credit", "exchange", "none"]
 Action = Literal["refund", "replace", "repair", "store_credit", "escalate", "decline"]
+ApprovalDecision = Literal["approve", "reject", "modify"]
 
 
 class IntakeResult(BaseModel):
@@ -114,3 +115,9 @@ class Recommendation(BaseModel):
     @classmethod
     def round_refund_amount(cls, value: float) -> float:
         return round(value, 2)
+
+
+class ApprovalResult(BaseModel):
+    decision: ApprovalDecision
+    refundAmount: float | None = Field(default=None, ge=0)
+    note: str | None = None

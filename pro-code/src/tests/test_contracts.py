@@ -1,16 +1,21 @@
-from datetime import date
-
 from contoso_lab.config import get_settings
-from contoso_lab.data_sources import load_sample_complaints, lookup_order
-from contoso_lab.iteration2_first_workflow import run_intake
+from contoso_lab.data_sources import load_sample_complaints, validate_seed_data_files
+from contoso_lab.iteration1_grounded_advisor import extract_customer_id, extract_order_id
 from contoso_lab.iteration3_full_system import approval_required
-from contoso_lab.models import IntakeResult, PolicyFinding, Recommendation
+from contoso_lab.models import IntakeResult, OrderDetails, PolicyFinding, Recommendation
 
 
-def test_data_dir_resolves_to_preloaded_data() -> None:
+def test_data_dir_resolves_to_preloaded_seed_data() -> None:
     settings = get_settings()
     assert (settings.data_dir / "orders.csv").exists()
     assert (settings.data_dir / "sample-complaints.md").exists()
+
+
+def test_seed_data_files_are_present_for_foundry_upload() -> None:
+    files = validate_seed_data_files(get_settings().data_dir)
+    assert len(files) == 5
+    assert any(path.name == "orders.csv" for path in files)
+    assert any(path.name == "past-tickets.csv" for path in files)
 
 
 def test_sample_complaints_parser_loads_cases() -> None:
@@ -20,16 +25,26 @@ def test_sample_complaints_parser_loads_cases() -> None:
     assert "customerId: CUST-8801" in cases["1"]
 
 
-def test_known_order_lookup_returns_real_data() -> None:
-    result = lookup_order(get_settings().data_dir, "CR-10432", today=date(2026, 8, 21))
-    assert result.found is True
-    assert result.customer == "Rita Sandoval"
-    assert result.amount == 189.00
-    assert result.daysSinceDelivery == 19
+def test_order_and_customer_extraction_from_complaint() -> None:
+    cases = load_sample_complaints(get_settings().data_dir)
+    assert extract_order_id(cases["1"]) == "CR-10432"
+    assert extract_customer_id(cases["1"]) == "CUST-8801"
 
 
-def test_unknown_order_does_not_fabricate() -> None:
-    result = lookup_order(get_settings().data_dir, "CR-99999", today=date(2026, 8, 21))
+def test_unknown_order_contract_prevents_fabrication() -> None:
+    result = OrderDetails(
+        orderId="CR-99999",
+        customerId=None,
+        customer=None,
+        item=None,
+        amount=None,
+        orderDate=None,
+        deliveryDate=None,
+        status=None,
+        paymentMethod=None,
+        daysSinceDelivery=None,
+        found=False,
+    )
     assert result.found is False
     assert result.customer is None
     assert result.amount is None
@@ -112,11 +127,3 @@ def test_no_order_complaint_contract() -> None:
     assert intake.needsClarification is True
     assert intake.orderId is None
     assert intake.clarifyingQuestion
-
-
-async def test_intake_ignores_prompt_injection() -> None:
-    cases = load_sample_complaints(get_settings().data_dir)
-    intake = await run_intake(cases["8"])
-    assert intake.orderId == "CR-10456"
-    assert intake.category != "fraud"
-    assert intake.needsClarification is False

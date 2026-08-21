@@ -4,7 +4,8 @@ import argparse
 import asyncio
 
 from .config import get_settings
-from .data_sources import load_sample_complaints
+from .data_sources import load_sample_complaints, validate_seed_data_files
+from .errors import FoundryConfigurationError
 from .iteration1_grounded_advisor import run_iteration1
 from .iteration2_first_workflow import run_iteration2
 from .iteration3_full_system import run_iteration3
@@ -22,7 +23,7 @@ def load_complaint_by_number(number: str) -> str:
 
 async def main() -> None:
     parser = argparse.ArgumentParser(description="Contoso Foundry Agent Lab")
-    parser.add_argument("iteration", choices=["iteration1", "iteration2", "iteration3"])
+    parser.add_argument("iteration", choices=["iteration1", "iteration2", "iteration3", "validate-data"])
     parser.add_argument("--complaint", help="Complaint number from sample-complaints.md")
     parser.add_argument("--text", help="Raw complaint text")
     parser.add_argument(
@@ -32,6 +33,14 @@ async def main() -> None:
     )
     args = parser.parse_args()
 
+    settings = get_settings()
+    if args.iteration == "validate-data":
+        files = validate_seed_data_files(settings.data_dir)
+        print("Seed files ready for Foundry IQ / tool upload:")
+        for path in files:
+            print(f"- {path}")
+        return
+
     if args.text:
         complaint_text = args.text
     elif args.complaint:
@@ -39,12 +48,15 @@ async def main() -> None:
     else:
         raise SystemExit("Provide --complaint N or --text 'complaint body'")
 
-    if args.iteration == "iteration1":
-        result = await run_iteration1(complaint_text)
-    elif args.iteration == "iteration2":
-        result = await run_iteration2(complaint_text)
-    else:
-        result = await run_iteration3(complaint_text, auto_approve=args.auto_approve)
+    try:
+        if args.iteration == "iteration1":
+            result = await run_iteration1(complaint_text)
+        elif args.iteration == "iteration2":
+            result = await run_iteration2(complaint_text)
+        else:
+            result = await run_iteration3(complaint_text, auto_approve=args.auto_approve)
+    except FoundryConfigurationError as exc:
+        raise SystemExit(str(exc)) from exc
 
     print(result)
 
