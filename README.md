@@ -5,6 +5,14 @@
 [![Lab Track](https://img.shields.io/badge/track-no--code%20%2B%20pro--code-blue)](#lab-journey)
 [![Iterations](https://img.shields.io/badge/iterations-1%20to%203-purple)](#what-you-will-build)
 [![Scenario](https://img.shields.io/badge/scenario-Contoso%20Retail-green)](#business-scenario)
+[![Microsoft Foundry](https://img.shields.io/badge/Microsoft-Foundry-0078D4)](#technologies-you-will-learn)
+[![Agent Framework](https://img.shields.io/badge/Microsoft-Agent%20Framework-5C2D91)](#technologies-you-will-learn)
+[![Foundry IQ](https://img.shields.io/badge/Foundry-IQ-0B6E69)](#technologies-you-will-learn)
+[![Foundry Tools](https://img.shields.io/badge/Foundry-Tools-FFB900)](#technologies-you-will-learn)
+[![Python](https://img.shields.io/badge/Python-3.11%2B-3776AB)](#technologies-you-will-learn)
+[![Pydantic](https://img.shields.io/badge/Pydantic-typed%20contracts-E92063)](#technologies-you-will-learn)
+[![Human in the loop](https://img.shields.io/badge/Human--in--the--loop-approval%20gates-D83B01)](#technologies-you-will-learn)
+[![GitHub Copilot](https://img.shields.io/badge/Built%20with-GitHub%20Copilot-181717)](#author)
 
 Created using **GitHub Copilot** by **Vishwas Gowda**.
 
@@ -14,6 +22,7 @@ Created using **GitHub Copilot** by **Vishwas Gowda**.
 
 - [Why this lab exists](#why-this-lab-exists)
 - [Business scenario](#business-scenario)
+- [Technologies you will learn](#technologies-you-will-learn)
 - [Included simulated data](#included-simulated-data)
 - [Lab journey](#lab-journey)
 - [What you will build](#what-you-will-build)
@@ -56,6 +65,27 @@ This lab automates that flow while keeping humans in control of financial and ri
 
 ---
 
+## Technologies you will learn
+
+| Technology / concept | Where it shows up in the lab | Why it matters |
+|---|---|---|
+| **Microsoft Foundry portal** | [No-code build lab](./LAB-contoso-agent-workflow_Version3.md) | Build, test, trace, and iterate agents visually before writing code. |
+| **Microsoft Agent Framework** | [Pro-code guide](./pro-code/START-HERE.md) | Rebuild the same system with code-first agents and orchestration. |
+| **Foundry-hosted agents** | [Pro-code implementation map](./pro-code/START-HERE.md#implementation-map) | Run specialist agents backed by deployed Foundry models. |
+| **Foundry IQ / agent knowledge** | [Foundry-first data model](./pro-code/START-HERE.md#foundry-first-data-model) | Ground agents in policy, tone, order, and history seed data without using repo files as runtime databases. |
+| **Foundry tools** | [Iteration 3 pro-code guide](./pro-code/START-HERE.md#iteration-3--full-system-in-code) | Simulate real operational lookups such as orders, ticket history, and approval workflows. |
+| **Multi-agent workflow design** | [What you will build](#what-you-will-build) | Split work across Intake, Policy, Order Lookup, History, Resolution, and Response Writer agents. |
+| **Fan-out / fan-in orchestration** | [Iteration 3](#iteration-3--full-system) | Run order, policy, and history lookups in parallel, then join them for a decision. |
+| **Human-in-the-loop approval** | [Success criteria](#success-criteria) | Keep humans in control of financial and fraud-risk decisions. |
+| **Prompt-injection resistance** | [Iteration 1](#iteration-1--grounded-advisor) | Treat customer messages as untrusted data and ignore malicious instructions. |
+| **Structured JSON contracts** | [`models.py`](./pro-code/src/contoso_lab/models.py) | Make agent hand-offs testable and debuggable. |
+| **Pydantic validation** | [`pro-code/src/contoso_lab/models.py`](./pro-code/src/contoso_lab/models.py) | Enforce strict contracts for Intake, Policy, Order, History, Resolution, and Approval outputs. |
+| **Python async orchestration** | [`iteration3_full_system.py`](./pro-code/src/contoso_lab/iteration3_full_system.py) | Use concurrent execution patterns for multi-agent workflows. |
+| **Azure Identity** | [Pro-code prerequisites](./pro-code/START-HERE.md#prerequisites) | Authenticate code to Foundry resources with Azure credentials. |
+| **GitHub Copilot** | [Author](#author) | Use Copilot to scaffold, refine, review, and document the lab. |
+
+---
+
 ## Included simulated data
 
 The repo is preloaded with the full fabricated Contoso Data Pack in [`data/`](./data/). See the [data folder guide](./data/README.md) for the full list.
@@ -66,7 +96,7 @@ The repo is preloaded with the full fabricated Contoso Data Pack in [`data/`](./
 - [`orders.csv`](./data/orders.csv)
 - [`past-tickets.csv`](./data/past-tickets.csv)
 
-You can use these files directly in the Foundry portal and in the pro-code implementation. No copy-paste from the lab markdown is required.
+You can use these files directly in the Foundry portal and as seed assets for the pro-code implementation. No copy-paste from the lab markdown is required.
 
 ---
 
@@ -183,12 +213,17 @@ By the end of [Iteration 3](./LAB-contoso-agent-workflow_Version3.md#iteration-3
 
 After completing this lab, you should be able to explain and implement:
 
+- how to build agents visually in the **Microsoft Foundry portal**,
+- how to move from a [portal-built prototype](./LAB-contoso-agent-workflow_Version3.md) to a [code-first implementation](./pro-code/START-HERE.md),
 - when to use one agent versus multiple specialist agents,
-- how to ground an agent in enterprise documents,
-- how to design JSON contracts between agents,
-- how to fan out parallel agent work and join the results,
+- how to ground agents using **Foundry IQ** and agent knowledge,
+- how to expose operational lookups through **Foundry tools** instead of repo-local files,
+- how to orchestrate agents with **Microsoft Agent Framework**,
+- how to design strict JSON contracts between agents,
+- how to validate agent outputs with **Pydantic**,
+- how to use Python async fan-out/fan-in patterns for multi-agent workflows,
 - where human approval belongs in an agentic workflow,
-- how to move from a [portal-built prototype](./LAB-contoso-agent-workflow_Version3.md) to a [code-first implementation](./pro-code/START-HERE.md).
+- how to test for refusal behaviour, prompt-injection resistance, and no-fabrication rules.
 
 ---
 
