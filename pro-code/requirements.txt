@@ -1,0 +1,4 @@
+agent-framework
+python-dotenv
+pydantic>=2
+pytest

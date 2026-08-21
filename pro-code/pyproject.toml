@@ -1,0 +1,20 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "contoso-foundry-agent-lab"
+version = "0.1.0"
+description = "Pro-code skeleton for the Contoso Foundry Agent Lab"
+requires-python = ">=3.11"
+dependencies = [
+  "agent-framework",
+  "python-dotenv",
+  "pydantic>=2",
+]
+
+[project.optional-dependencies]
+dev = ["pytest"]
+
+[tool.setuptools.packages.find]
+where = ["src"]
