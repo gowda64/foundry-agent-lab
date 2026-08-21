@@ -5,27 +5,27 @@ The simulated Contoso Retail Data Pack is preloaded here so learners do not need
 ## Quick links
 
 - [Data files](#data-files)
-- [Where each file is used](#where-each-file-is-used)
+- [How these files are used](#how-these-files-are-used)
 - [Back to the main lab README](../README.md)
 
 ## Data files
 
 | File | Purpose |
 |---|---|
-| [`returns-policy.md`](./returns-policy.md) | Grounding document for refund, return, approval, and escalation rules |
-| [`tone-of-voice.md`](./tone-of-voice.md) | Customer communication guide for final replies |
-| [`sample-complaints.md`](./sample-complaints.md) | Primary test inputs for agent and workflow validation |
-| [`orders.csv`](./orders.csv) | Simulated order system data for deterministic order lookup |
-| [`past-tickets.csv`](./past-tickets.csv) | Simulated resolved support-ticket history for similarity lookup |
+| [`returns-policy.md`](./returns-policy.md) | Seed grounding document for refund, return, approval, and escalation rules |
+| [`tone-of-voice.md`](./tone-of-voice.md) | Seed grounding document for customer communication style |
+| [`sample-complaints.md`](./sample-complaints.md) | Local test inputs for agent and workflow validation |
+| [`orders.csv`](./orders.csv) | Seed order-system data for a Foundry IQ-backed or tool-backed order lookup |
+| [`past-tickets.csv`](./past-tickets.csv) | Seed support-ticket history for a Foundry IQ-backed or tool-backed history search |
 
-## Where each file is used
+## How these files are used
 
-| File | Used in |
-|---|---|
-| [`returns-policy.md`](./returns-policy.md) | [Iteration 1](../LAB-contoso-agent-workflow_Version3.md#iteration-1--the-grounded-advisor), [Iteration 2](../LAB-contoso-agent-workflow_Version3.md#iteration-2--the-first-workflow), [Iteration 3](../LAB-contoso-agent-workflow_Version3.md#iteration-3--the-full-system) |
-| [`tone-of-voice.md`](./tone-of-voice.md) | [Iteration 1](../LAB-contoso-agent-workflow_Version3.md#iteration-1--the-grounded-advisor), [Iteration 2](../LAB-contoso-agent-workflow_Version3.md#iteration-2--the-first-workflow), [Iteration 3](../LAB-contoso-agent-workflow_Version3.md#iteration-3--the-full-system) |
-| [`sample-complaints.md`](./sample-complaints.md) | Test inputs for [Iteration 1](../LAB-contoso-agent-workflow_Version3.md#gate-1), [Iteration 2](../LAB-contoso-agent-workflow_Version3.md#gate-2), and [Iteration 3](../LAB-contoso-agent-workflow_Version3.md#gate-3) |
-| [`orders.csv`](./orders.csv) | [Iteration 3 Order Lookup](../LAB-contoso-agent-workflow_Version3.md#iteration-3-agents) |
-| [`past-tickets.csv`](./past-tickets.csv) | [Iteration 3 History Agent](../LAB-contoso-agent-workflow_Version3.md#iteration-3-agents) |
+| File | No-code portal use | Pro-code use |
+|---|---|---|
+| [`returns-policy.md`](./returns-policy.md) | Upload as knowledge for the [Complaint Advisor](../LAB-contoso-agent-workflow_Version3.md#iteration-1--the-grounded-advisor) and [Policy Agent](../LAB-contoso-agent-workflow_Version3.md#iteration-2--the-first-workflow). | Upload to Foundry IQ / agent knowledge; the pro-code Policy Agent should retrieve it through Foundry, not read it from this repo at runtime. |
+| [`tone-of-voice.md`](./tone-of-voice.md) | Upload as knowledge for the [Complaint Advisor](../LAB-contoso-agent-workflow_Version3.md#iteration-1--the-grounded-advisor) and [Response Writer Agent](../LAB-contoso-agent-workflow_Version3.md#iteration-2--the-first-workflow). | Upload to Foundry IQ / agent knowledge; the pro-code Response Writer should retrieve it through Foundry, not read it from this repo at runtime. |
+| [`sample-complaints.md`](./sample-complaints.md) | Use as manual playground and workflow test inputs. | Parsed locally only so `--complaint N` can load a test input. This is not business grounding data. |
+| [`orders.csv`](./orders.csv) | Upload as knowledge for the portal [Order Lookup Agent](../LAB-contoso-agent-workflow_Version3.md#iteration-3-agents). | Upload to Foundry IQ or expose through a Foundry tool named by `ORDER_LOOKUP_TOOL_NAME`. Do not query the CSV from pro-code runtime logic. |
+| [`past-tickets.csv`](./past-tickets.csv) | Upload as knowledge for the portal [History Agent](../LAB-contoso-agent-workflow_Version3.md#iteration-3-agents). | Upload to Foundry IQ or expose through a Foundry tool named by `HISTORY_SEARCH_TOOL_NAME`. Do not query the CSV from pro-code runtime logic. |
 
 All data is fabricated for the lab and safe to use in demos, tests, and workshops.

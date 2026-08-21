@@ -18,6 +18,7 @@ Use [`START-HERE.md`](./START-HERE.md) as the implementation guide.
 ## Implementation strategy
 
 - Keep the same iterations as the [portal lab](../LAB-contoso-agent-workflow_Version3.md): [Iteration 1](../LAB-contoso-agent-workflow_Version3.md#iteration-1--the-grounded-advisor), [Iteration 2](../LAB-contoso-agent-workflow_Version3.md#iteration-2--the-first-workflow), and [Iteration 3](../LAB-contoso-agent-workflow_Version3.md#iteration-3--the-full-system).
+- Keep Iteration 1 as one `Complaint Advisor` agent. Do not decompose it until Iteration 2.
 - Keep each agent prompt in [`prompts/`](./prompts/).
 - Keep typed JSON contracts in [`src/contoso_lab/models.py`](./src/contoso_lab/models.py).
 - Put all Microsoft Agent Framework / Foundry SDK integration in [`src/contoso_lab/foundry_client.py`](./src/contoso_lab/foundry_client.py).
@@ -25,7 +26,7 @@ Use [`START-HERE.md`](./START-HERE.md) as the implementation guide.
   - [`iteration1_grounded_advisor.py`](./src/contoso_lab/iteration1_grounded_advisor.py)
   - [`iteration2_first_workflow.py`](./src/contoso_lab/iteration2_first_workflow.py)
   - [`iteration3_full_system.py`](./src/contoso_lab/iteration3_full_system.py)
-- Treat [`../data/`](../data/) as seed assets for Foundry IQ / tools. Do not build runtime business logic that reads those CSV/Markdown files directly.
+- Treat [`../data/`](../data/) as seed assets for Foundry IQ / tools. Do not build runtime business logic that reads those CSV/Markdown files directly, except parsing `sample-complaints.md` as local test input.
 
 ## Status
 

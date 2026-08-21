@@ -25,7 +25,7 @@ def default_client() -> ContosoFoundryClient:
 
 
 async def run_iteration1(complaint_text: str, client: ContosoFoundryClient | None = None) -> str:
-    """Run the single-agent Grounded Advisor through Foundry-hosted agents.
+    """Run Iteration 1 as one grounded Complaint Advisor agent.
 
     Local files are loaded only to verify seed prompts/data exist for the lab. The
     actual policy and tone retrieval should come from Foundry IQ / agent knowledge.
@@ -36,24 +36,4 @@ async def run_iteration1(complaint_text: str, client: ContosoFoundryClient | Non
     _ = read_text(settings.data_dir / "tone-of-voice.md")
 
     active_client = client or default_client()
-    intake = await active_client.run_intake(complaint_text)
-    policy_finding = await active_client.run_policy(intake)
-    if "POLICY_UNCLEAR" in policy_finding.reasoning:
-        return f"STEP 1 — UNDERSTAND\n{intake.summary}\n\nSTEP 2 — POLICY VERDICT\n{policy_finding.reasoning}"
-    draft = await active_client.write_response(intake, policy_finding)
-    approval_line = "\n⚠️ MANAGER APPROVAL REQUIRED before sending.\n" if policy_finding.requiresManagerApproval else "\n"
-    return (
-        "STEP 1 — UNDERSTAND\n"
-        f"Category: {intake.category}\n"
-        f"Sentiment: {intake.sentiment}\n"
-        f"Order ID: {intake.orderId or 'not provided'}\n\n"
-        "STEP 2 — POLICY VERDICT\n"
-        f"Eligible: {policy_finding.eligible}\n"
-        f"Remedy: {policy_finding.remedy}\n"
-        f"Maximum amount: ${policy_finding.maxAmount:.2f}\n"
-        f"Clause: {policy_finding.clause}\n"
-        f"Manager approval required: {policy_finding.requiresManagerApproval}\n"
-        f"{approval_line}\n"
-        "STEP 3 — DRAFT REPLY\n"
-        f"{draft}"
-    )
+    return await active_client.run_complaint_advisor(complaint_text)

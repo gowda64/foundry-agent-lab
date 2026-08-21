@@ -15,6 +15,8 @@ TModel = TypeVar("TModel", bound=BaseModel)
 class ContosoFoundryClient(Protocol):
     """Boundary between lab orchestration code and Foundry-hosted agents/tools."""
 
+    async def run_complaint_advisor(self, complaint_text: str) -> str: ...
+
     async def run_intake(self, complaint_text: str) -> IntakeResult: ...
 
     async def run_policy(self, intake: IntakeResult) -> PolicyFinding: ...
@@ -45,7 +47,7 @@ class ContosoFoundryClient(Protocol):
 class FoundryAgentClient:
     """Adapter placeholder for Microsoft Agent Framework + Foundry-hosted agents.
 
-    Keep all SDK-specific code in this file. The iteration files should remain
+    Keep all SDK-specific code in this file. The iteration files stay
     orchestration-only so the lab clearly separates:
 
     - agent contracts: models.py
@@ -55,7 +57,7 @@ class FoundryAgentClient:
     Helpful references while filling in TODOs:
 
     - Microsoft Learn — Foundry provider:
-      https://learn.microsoft.com/en-us/agent-framework/integrations/by-component/model-providers/microsoft-foundry
+      https://learn.microsoft.com/en-us/agent-framework/agents/providers/microsoft-foundry
     - Microsoft Learn — Tools overview:
       https://learn.microsoft.com/en-us/agent-framework/agents/tools/
     - Python samples:
@@ -70,6 +72,28 @@ class FoundryAgentClient:
         self.settings = settings
         self.project_endpoint = require_configured(settings.foundry_project_endpoint, "FOUNDRY_PROJECT_ENDPOINT")
         self.knowledge_base = settings.foundry_iq_knowledge_base_id or settings.foundry_iq_knowledge_base_name
+
+    async def run_complaint_advisor(self, complaint_text: str) -> str:
+        """Call the single-agent Complaint Advisor for Iteration 1.
+
+        This method intentionally keeps Iteration 1 as one grounded agent. Do not
+        implement this by chaining Intake + Policy + Response Writer; that split
+        belongs to Iteration 2.
+        """
+        raw = await self._run_agent(
+            agent_name="Complaint Advisor",
+            model_deployment=self.settings.large_model_deployment,
+            instructions_file="complaint_advisor.md",
+            payload={
+                "complaintText": complaint_text,
+                "knowledgeBase": self.knowledge_base,
+                "requiredSources": ["returns-policy.md", "tone-of-voice.md"],
+            },
+            expected_shape="Plain text with STEP 1 — UNDERSTAND, STEP 2 — POLICY VERDICT, and STEP 3 — DRAFT REPLY.",
+        )
+        if not isinstance(raw, str):
+            raise TypeError("Complaint Advisor must return the three-step plain-text advisor response")
+        return raw
 
     async def run_intake(self, complaint_text: str) -> IntakeResult:
         """Call the Intake Agent and validate the JSON contract."""
@@ -128,8 +152,8 @@ class FoundryAgentClient:
         """Call the Foundry order lookup tool.
 
         TODO:
-        1. Upload `data/orders.csv` to a Foundry IQ knowledge base OR expose an
-           approved order API through a Foundry tool / MCP server / Logic App.
+        1. Upload `data/orders.csv` to Foundry IQ OR expose an approved order API
+           through a Foundry tool / MCP server / Logic App.
         2. Implement `_call_foundry_tool(...)` so this method calls that tool.
         3. Ensure unknown order IDs return `found:false` and all business fields
            null. The `OrderDetails` model enforces this.
@@ -235,12 +259,10 @@ class FoundryAgentClient:
                client=client,
                name=agent_name,
                instructions=instructions,
-               # Add app-owned tools here if this agent owns any local tools.
-               # See 02_add_tools.py in the official samples for `@tool`.
            )
 
-        3. Send a strict payload. For JSON agents, include the expected output shape
-           in the user message so the model has no ambiguity:
+        3. Send a strict payload. For JSON agents, include the expected output
+           shape in the user message:
 
            message = json.dumps({
                "task": agent_name,
@@ -257,9 +279,9 @@ class FoundryAgentClient:
            raw = json.loads(text)
            return raw
 
-        5. If you use service-managed Prompt/Hosted Agents instead of
-           app-owned `Agent(client=FoundryChatClient(...))`, keep the public
-           method signatures in this adapter the same and swap only this method.
+        5. If you use service-managed Prompt/Hosted Agents instead of app-owned
+           `Agent(client=FoundryChatClient(...))`, keep the public method
+           signatures in this adapter the same and swap only this method.
 
         Do not read `data/orders.csv`, `data/past-tickets.csv`, or policy files as
         runtime databases here. Those files are seed assets for Foundry IQ/tools.
@@ -302,11 +324,7 @@ class FoundryAgentClient:
 
     @staticmethod
     def _validate_json_contract(raw: Any, model: type[TModel], source: str) -> TModel:
-        """Validate an agent/tool response against a strict Pydantic contract.
-
-        SDK hint: if `agent.run(...)` returns text, call `json.loads(text)` before
-        this method. If it already returns a dict-like payload, pass that directly.
-        """
+        """Validate an agent/tool response against a strict Pydantic contract."""
         if isinstance(raw, model):
             return raw
         if isinstance(raw, str):

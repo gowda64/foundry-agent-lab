@@ -4,7 +4,7 @@
 
 This is the no-code Foundry portal half of the lab. The repository currently maintains **Iterations 1, 2, and 3** for this exercise.
 
-> The pro-code half in [`pro-code/START-HERE.md`](./pro-code/START-HERE.md) mirrors the same iterations, agents, data, and tests.
+> The pro-code half in [`pro-code/START-HERE.md`](./pro-code/START-HERE.md) mirrors the same iterations, agents, data, and tests using Microsoft Agent Framework, Foundry IQ, and Foundry tools.
 
 ## Lab contents
 
@@ -31,7 +31,7 @@ This is the no-code Foundry portal half of the lab. The repository currently mai
 
 ## Preloaded Data Pack
 
-The simulated data is already available in [`data/`](./data/). See the [data folder guide](./data/README.md) for the full list.
+The simulated data is already available in [`data/`](./data/). See the [data folder guide](./data/README.md) for file-by-file usage.
 
 - [`returns-policy.md`](./data/returns-policy.md)
 - [`tone-of-voice.md`](./data/tone-of-voice.md)
@@ -39,7 +39,7 @@ The simulated data is already available in [`data/`](./data/). See the [data fol
 - [`orders.csv`](./data/orders.csv)
 - [`past-tickets.csv`](./data/past-tickets.csv)
 
-Use these files directly when uploading knowledge to Foundry portal agents or running the [pro-code version](./pro-code/START-HERE.md).
+Use these files directly when uploading knowledge to Foundry portal agents. In the pro-code track, treat them as seed assets for Foundry IQ / Foundry tools rather than as runtime files read by Python code.
 
 ---
 
@@ -59,7 +59,7 @@ Create a single `Complaint Advisor` agent that a support rep can paste a complai
 1. Agents → **+ New agent**.
 2. Name: `Complaint Advisor`.
 3. Model: large model deployment, for example `gpt-4o`.
-4. Instructions: use the [`complaint_advisor.md`](./pro-code/prompts/complaint_advisor.md) prompt placeholder, populated from the original lab prompt pack.
+4. Instructions: use the [`complaint_advisor.md`](./pro-code/prompts/complaint_advisor.md) prompt.
 5. Knowledge: upload:
    - [`data/returns-policy.md`](./data/returns-policy.md)
    - [`data/tone-of-voice.md`](./data/tone-of-voice.md)
@@ -175,14 +175,6 @@ The workflow must:
 
 # Prompt Pack
 
-The portal lab and pro-code lab should use the same prompt text. Prompt placeholders live in [`pro-code/prompts/`](./pro-code/prompts/):
-
-- [`complaint_advisor.md`](./pro-code/prompts/complaint_advisor.md)
-- [`intake_agent.md`](./pro-code/prompts/intake_agent.md)
-- [`policy_agent.md`](./pro-code/prompts/policy_agent.md)
-- [`response_writer_agent.md`](./pro-code/prompts/response_writer_agent.md)
-- [`order_lookup_agent.md`](./pro-code/prompts/order_lookup_agent.md)
-- [`history_agent.md`](./pro-code/prompts/history_agent.md)
-- [`resolution_agent.md`](./pro-code/prompts/resolution_agent.md)
+The portal lab and pro-code lab should use the same prompt text. Prompt files live in [`pro-code/prompts/`](./pro-code/prompts/).
 
 For the code-first version, continue with [`pro-code/START-HERE.md`](./pro-code/START-HERE.md).
