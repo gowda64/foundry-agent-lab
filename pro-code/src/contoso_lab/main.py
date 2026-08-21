@@ -4,22 +4,20 @@ import argparse
 import asyncio
 
 from .config import get_settings
+from .data_sources import load_sample_complaints
 from .iteration1_grounded_advisor import run_iteration1
 from .iteration2_first_workflow import run_iteration2
 from .iteration3_full_system import run_iteration3
 
 
 def load_complaint_by_number(number: str) -> str:
-    """Temporary helper.
-
-    TODO: parse sample-complaints.md into individual cases. Until then, pass complaint text directly
-    with --text or implement this parser as part of the exercise.
-    """
     settings = get_settings()
-    path = settings.data_dir / "sample-complaints.md"
-    if not path.exists():
-        raise FileNotFoundError(f"Missing {path}. Copy it from the lab Data Pack.")
-    raise NotImplementedError("Parse sample-complaints.md and return the requested numbered complaint.")
+    cases = load_sample_complaints(settings.data_dir)
+    try:
+        return cases[number]
+    except KeyError as exc:
+        available = ", ".join(sorted(cases))
+        raise SystemExit(f"Unknown complaint '{number}'. Available complaints: {available}") from exc
 
 
 async def main() -> None:
@@ -27,6 +25,11 @@ async def main() -> None:
     parser.add_argument("iteration", choices=["iteration1", "iteration2", "iteration3"])
     parser.add_argument("--complaint", help="Complaint number from sample-complaints.md")
     parser.add_argument("--text", help="Raw complaint text")
+    parser.add_argument(
+        "--auto-approve",
+        action="store_true",
+        help="Automatically approve human-gated Iteration 3 decisions for non-interactive demos.",
+    )
     args = parser.parse_args()
 
     if args.text:
@@ -41,7 +44,7 @@ async def main() -> None:
     elif args.iteration == "iteration2":
         result = await run_iteration2(complaint_text)
     else:
-        result = await run_iteration3(complaint_text)
+        result = await run_iteration3(complaint_text, auto_approve=args.auto_approve)
 
     print(result)
 

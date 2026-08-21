@@ -5,10 +5,11 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "contoso-foundry-agent-lab"
 version = "0.1.0"
-description = "Pro-code skeleton for the Contoso Foundry Agent Lab"
+description = "Pro-code skeleton and local reference implementation for the Contoso Foundry Agent Lab"
 requires-python = ">=3.11"
 dependencies = [
   "agent-framework",
+  "azure-identity",
   "python-dotenv",
   "pydantic>=2",
 ]
@@ -18,3 +19,7 @@ dev = ["pytest"]
 
 [tool.setuptools.packages.find]
 where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["src/tests"]
+pythonpath = ["src"]

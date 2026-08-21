@@ -12,6 +12,7 @@ The goal is not to create a different application. The goal is to reproduce the 
 ## Contents
 
 - [Prerequisites](#prerequisites)
+- [Local reference implementation](#local-reference-implementation)
 - [Included data](#included-data)
 - [Iteration 1 — Grounded Advisor in code](#iteration-1--grounded-advisor-in-code)
 - [Iteration 2 — First Workflow in code](#iteration-2--first-workflow-in-code)
@@ -45,7 +46,21 @@ cp .env.example .env
 # edit .env with your Foundry project endpoint, deployments, and auth settings
 ```
 
-> The Microsoft Agent Framework Python package is `agent-framework`. Check the current Microsoft Agent Framework docs for exact Foundry provider APIs before replacing the TODO blocks.
+> The Microsoft Agent Framework Python package is `agent-framework`. The starter also includes `azure-identity`, because the official Foundry quickstart uses Azure credentials with `FoundryChatClient`.
+
+## Local reference implementation
+
+The pro-code folder now includes a deterministic local reference implementation. This means the commands below run before you connect live Foundry-hosted agents.
+
+Use it to verify:
+
+- data loading,
+- JSON contracts,
+- routing logic,
+- human approval branching,
+- response-writing shape.
+
+Then replace the local reference functions with Microsoft Agent Framework calls one agent at a time.
 
 ## Included data
 
@@ -79,10 +94,11 @@ Data files:
 
 What to write:
 
-1. Create one Foundry-backed Agent Framework agent using the large model.
-2. Load the [returns policy](../data/returns-policy.md) and [tone guide](../data/tone-of-voice.md), or inject their contents into the retrieval/grounding setup supported by your Foundry-hosted agent configuration.
-3. Send one complaint at a time from [`sample-complaints.md`](../data/sample-complaints.md).
-4. Assert that the response includes:
+1. Start from the local reference implementation in [`iteration1_grounded_advisor.py`](./src/contoso_lab/iteration1_grounded_advisor.py).
+2. Replace the deterministic advisor logic with one Foundry-backed Agent Framework agent using the large model.
+3. Load the [returns policy](../data/returns-policy.md) and [tone guide](../data/tone-of-voice.md), or inject their contents into the retrieval/grounding setup supported by your Foundry-hosted agent configuration.
+4. Send one complaint at a time from [`sample-complaints.md`](../data/sample-complaints.md).
+5. Assert that the response includes:
    - `STEP 1 — UNDERSTAND`,
    - `STEP 2 — POLICY VERDICT`,
    - `STEP 3 — DRAFT REPLY`,
@@ -115,11 +131,11 @@ Prompt files:
 
 What to write:
 
-1. Implement `run_intake(complaint_text)` in [`iteration2_first_workflow.py`](./src/contoso_lab/iteration2_first_workflow.py).
+1. Start from `run_intake(complaint_text)` in [`iteration2_first_workflow.py`](./src/contoso_lab/iteration2_first_workflow.py), then replace it with the Intake Agent call.
 2. Validate the Intake output against `IntakeResult` in [`models.py`](./src/contoso_lab/models.py).
-3. Implement `run_policy(intake)` in [`iteration2_first_workflow.py`](./src/contoso_lab/iteration2_first_workflow.py).
+3. Replace `run_policy(intake)` with the Policy Agent call.
 4. Validate the Policy output against `PolicyFinding` in [`models.py`](./src/contoso_lab/models.py).
-5. Implement `run_response_writer(intake, policy_finding)` in [`iteration2_first_workflow.py`](./src/contoso_lab/iteration2_first_workflow.py).
+5. Replace `run_response_writer(intake, policy_finding)` with the Response Writer Agent call.
 6. Return `finalReply` as plain text.
 
 Run:
@@ -177,8 +193,8 @@ Run:
 
 ```bash
 python -m contoso_lab.main iteration3 --complaint 1
-python -m contoso_lab.main iteration3 --complaint 2
-python -m contoso_lab.main iteration3 --complaint 4
+python -m contoso_lab.main iteration3 --complaint 2 --auto-approve
+python -m contoso_lab.main iteration3 --complaint 4 --auto-approve
 python -m contoso_lab.main iteration3 --complaint 7
 ```
 
@@ -192,7 +208,9 @@ pytest
 
 The tests in [`src/tests/test_contracts.py`](./src/tests/test_contracts.py) focus on stable lab requirements:
 
-- JSON outputs parse correctly,
+- data paths resolve from either repo root or `pro-code/`,
+- sample complaints parse correctly,
+- known and unknown orders are handled deterministically,
 - high-value refunds require approval,
 - fraud complaints require approval,
 - no-order complaints ask one clarifying question.

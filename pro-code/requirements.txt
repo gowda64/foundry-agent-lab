@@ -1,4 +1,5 @@
 agent-framework
+azure-identity
 python-dotenv
 pydantic>=2
 pytest
