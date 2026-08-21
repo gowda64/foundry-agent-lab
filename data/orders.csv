@@ -1,0 +1,33 @@
+order_id,customer_id,customer,item,amount,order_date,delivery_date,status,payment_method
+CR-10432,CUST-8801,Rita Sandoval,Contoso BrewMaster Coffee Machine,189.00,2026-07-28,2026-08-02,delivered,visa_ending_4412
+CR-10433,CUST-8802,Dmitri Volkov,Contoso Steel Kettle 1.7L,42.50,2026-07-28,2026-08-01,delivered,mastercard_ending_9087
+CR-10434,CUST-8803,Amara Okafor,Contoso AirGlide Vacuum,315.00,2026-07-29,2026-08-04,delivered,paypal
+CR-10435,CUST-8804,Henrik Lundqvist,Contoso Ceramic Pan Set,88.00,2026-07-29,2026-08-03,delivered,visa_ending_2210
+CR-10436,CUST-8805,Priya Raghavan,Contoso SmartScale Pro,64.99,2026-07-30,2026-08-05,delivered,amex_ending_1005
+CR-10437,CUST-8806,Tomas Bergman,Contoso ChillBox Mini Fridge,229.00,2026-07-30,2026-08-09,delivered,visa_ending_7731
+CR-10438,CUST-8807,Nadia Farouk,Contoso Blend360 Blender,119.00,2026-07-31,2026-08-06,delivered,mastercard_ending_3344
+CR-10439,CUST-8808,Liam Doherty,Contoso ToastPro 4-Slice,58.00,2026-07-31,2026-08-04,delivered,paypal
+CR-10440,CUST-8809,Yuki Tanaka,Contoso SousVide Stick,142.00,2026-08-01,2026-08-07,delivered,visa_ending_5567
+CR-10441,CUST-8810,Grace Mbeki,Contoso Knife Block 8pc,176.00,2026-08-01,2026-08-06,delivered,mastercard_ending_8899
+CR-10442,CUST-8811,Ravi Chandrasekhar,Contoso AirFry XL,198.00,2026-08-02,2026-08-08,delivered,visa_ending_1123
+CR-10443,CUST-8812,Elena Petrova,Contoso Espresso Grinder,134.00,2026-08-02,2026-08-11,delivered,amex_ending_4420
+CR-10444,CUST-8813,Marcus Bell,Contoso StandMixer 5L,289.00,2026-08-03,2026-08-09,delivered,visa_ending_6612
+CR-10445,CUST-8814,Sofia Marchetti,Contoso Glass Storage Set,37.00,2026-08-03,2026-08-07,delivered,paypal
+CR-10446,CUST-8815,Kwame Asante,Contoso RiceMaster 1.8L,72.50,2026-08-04,2026-08-10,delivered,mastercard_ending_2255
+CR-10447,CUST-8816,Anneke de Vries,Contoso Induction Hob Portable,156.00,2026-08-04,2026-08-13,delivered,visa_ending_9901
+CR-10448,CUST-8817,Jonah Levi,Contoso Water Filter Jug,29.99,2026-08-05,2026-08-09,delivered,paypal
+CR-10449,CUST-8818,Fatima Zahra,Contoso Slow Cooker 6L,94.00,2026-08-05,2026-08-11,delivered,visa_ending_3378
+CR-10450,CUST-8819,Oscar Nunez,Contoso Milk Frother,26.00,2026-08-06,2026-08-10,delivered,mastercard_ending_7712
+CR-10451,CUST-8820,Ingrid Holm,Contoso Cast Iron Skillet,68.00,2026-08-06,2026-08-12,delivered,visa_ending_4488
+CR-10452,CUST-8821,Samuel Adeyemi,Contoso Juicer Pro,211.00,2026-08-07,2026-08-14,delivered,amex_ending_6631
+CR-10453,CUST-8822,Beatriz Silva,Contoso Bread Maker,163.00,2026-08-07,2026-08-12,delivered,paypal
+CR-10454,CUST-8823,Chen Wei,Contoso Digital Thermometer,19.99,2026-08-08,2026-08-12,delivered,visa_ending_5590
+CR-10455,CUST-8824,Aisha Rahman,Contoso Espresso Machine Deluxe,450.00,2026-08-08,2026-08-13,delivered,visa_ending_8823
+CR-10456,CUST-8825,Petar Novak,Contoso Herb Garden Kit,45.00,2026-08-09,2026-08-15,delivered,paypal
+CR-10457,CUST-8826,Zoe Kavanagh,Contoso Wine Cooler 12-Bottle,378.00,2026-08-09,2026-08-16,delivered,visa_ending_2244
+CR-10458,CUST-8827,Idris Malik,Contoso Pressure Cooker 8L,187.00,2026-08-10,2026-08-15,delivered,mastercard_ending_9911
+CR-10459,CUST-8828,Marta Kowalski,Contoso Dish Rack Steel,33.50,2026-08-10,2026-08-14,delivered,paypal
+CR-10460,CUST-8829,Felix Adeboye,Contoso Cookware Bundle 12pc,412.00,2026-08-11,2026-08-19,delivered,visa_ending_7003
+CR-10461,CUST-8801,Rita Sandoval,Contoso Coffee Bean Grinder,79.00,2026-08-11,2026-08-16,delivered,visa_ending_4412
+CR-10462,CUST-8830,Lucia Ferreira,Contoso Ice Cream Maker,128.00,2026-08-12,,in_transit,paypal
+CR-10463,CUST-8831,Omar Haddad,Contoso Smoker Grill,529.00,2026-08-12,,in_transit,visa_ending_1177

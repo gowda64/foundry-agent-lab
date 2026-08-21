@@ -1,0 +1,51 @@
+ticket_id,customer_id,category,summary,resolution,refund_amount,days_to_resolve,csat
+TK-2041,CUST-7712,damaged_item,Coffee machine arrived with cracked housing,full refund,175.00,1,5
+TK-2042,CUST-7713,late_delivery,Delivery 8 days past promised date,delivery charge refunded,7.99,1,4
+TK-2043,CUST-7714,wrong_item,Received kettle instead of blender,correct item dispatched free,0.00,2,5
+TK-2044,CUST-7715,damaged_item,Vacuum cleaner dented in transit,replacement sent,0.00,2,4
+TK-2045,CUST-7716,billing,Charged twice for one order,duplicate charge refunded,88.00,1,5
+TK-2046,CUST-7717,missing_item,Pan missing from cookware bundle,missing item dispatched,0.00,3,4
+TK-2047,CUST-7718,late_delivery,Order 16 days late,full refund and cancellation,142.00,1,3
+TK-2048,CUST-7719,fraud,Card used without authorisation,escalated to fraud team,0.00,6,2
+TK-2049,CUST-7720,damaged_item,Blender jug shattered on arrival,full refund,119.00,1,5
+TK-2050,CUST-7721,other,Customer wanted colour swap after 40 days,store credit issued,0.00,2,3
+TK-2051,CUST-7722,damaged_item,Mixer bowl chipped,partial refund offered and accepted,45.00,2,4
+TK-2052,CUST-7723,wrong_item,Wrong size pan set,correct item dispatched free,0.00,2,5
+TK-2053,CUST-7724,late_delivery,Courier depot backlog 6 days,delivery charge refunded,5.99,1,4
+TK-2054,CUST-7725,billing,Refund not received after 10 days,refund re-issued,64.99,3,3
+TK-2055,CUST-7726,damaged_item,Kettle base cracked,replacement sent,0.00,1,5
+TK-2056,CUST-7727,other,Requested return day 52,exchange only per policy,0.00,1,2
+TK-2057,CUST-7728,missing_item,Grinder missing from bundle,line refunded,79.00,2,4
+TK-2058,CUST-7729,damaged_item,Slow cooker lid broken,full refund,94.00,1,5
+TK-2059,CUST-7730,fraud,Claimed non-delivery but tracking showed delivered,declined after investigation,0.00,7,1
+TK-2060,CUST-7731,late_delivery,Weather delay 7 days,delivery charge refunded,4.99,1,4
+TK-2088,CUST-7758,damaged_item,BrewMaster coffee machine damaged in box,full refund,189.00,1,5
+TK-2089,CUST-7759,damaged_item,Espresso machine dented panel,replacement sent,0.00,3,4
+TK-2090,CUST-7760,billing,Wrong currency charged,difference refunded,12.40,2,4
+TK-2091,CUST-7761,wrong_item,Received thermometer instead of scale,correct item dispatched free,0.00,1,5
+TK-2092,CUST-7762,other,Gift card refund requested,declined per policy 8.2,0.00,1,2
+TK-2093,CUST-7763,damaged_item,Wine cooler door misaligned,repair arranged under warranty,0.00,9,3
+TK-2094,CUST-7764,late_delivery,Order 21 days late,full refund,378.00,2,3
+TK-2095,CUST-7765,missing_item,Two glasses missing from set,partial refund,14.00,1,4
+TK-2096,CUST-7766,fraud,Multiple high-value claims same address,escalated and account flagged,0.00,11,1
+TK-2097,CUST-7767,damaged_item,Skillet arrived rusted,full refund,68.00,1,5
+TK-2098,CUST-7768,other,Wanted upgrade credit after 20 days,exchange processed,0.00,3,4
+TK-2099,CUST-7769,billing,Subscription charged after cancellation,refunded and cancelled,19.99,2,4
+TK-2100,CUST-7770,damaged_item,AirFry basket warped,replacement sent,0.00,2,5
+TK-2101,CUST-7771,late_delivery,Delivery 4 days late,no remedy per policy 7.1,0.00,1,3
+TK-2102,CUST-7772,wrong_item,Wrong knife block model,correct item dispatched free,0.00,2,5
+TK-2103,CUST-7773,damaged_item,Juicer motor housing cracked,full refund,211.00,3,4
+TK-2104,CUST-7774,other,Requested refund on final-sale clearance,exchange offered per policy 8.3,0.00,1,2
+TK-2105,CUST-7775,missing_item,Power cable missing,part dispatched,0.00,2,4
+TK-2106,CUST-7776,damaged_item,Bread maker paddle broken,partial refund,25.00,1,4
+TK-2107,CUST-7777,fraud,Refund requested on order never placed,declined,0.00,5,1
+TK-2156,CUST-7826,damaged_item,BrewMaster machine leaking on first use,full refund,189.00,2,5
+TK-2157,CUST-7827,late_delivery,Courier lost parcel 12 days,full refund,156.00,4,3
+TK-2158,CUST-7828,billing,Overcharged delivery fee,fee refunded,9.99,1,4
+TK-2159,CUST-7829,damaged_item,Pressure cooker seal damaged,replacement sent,0.00,2,5
+TK-2160,CUST-7830,wrong_item,Wrong colour vacuum,exchange processed,0.00,3,4
+TK-2161,CUST-7831,other,Return after 65 days,declined per policy 2.3,0.00,1,2
+TK-2162,CUST-7832,missing_item,Filter cartridge missing,part dispatched,0.00,1,5
+TK-2163,CUST-7833,damaged_item,Mini fridge dented door,partial refund,60.00,2,4
+TK-2164,CUST-7834,late_delivery,Delivery 9 days late,delivery charge refunded,6.99,1,4
+TK-2165,CUST-7835,damaged_item,Cookware bundle two items damaged,partial refund,120.00,2,4

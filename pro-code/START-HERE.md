@@ -16,7 +16,7 @@ The goal is not to create a different application. The goal is to reproduce the 
 - Deployed models matching the lab:
   - small/fast model, for example `gpt-4o-mini`
   - large/judgement model, for example `gpt-4o`
-- Local copies of the Data Pack in `../data/`
+- The preloaded simulated Data Pack in `../data/`
 
 Install dependencies:
 
@@ -36,6 +36,18 @@ cp .env.example .env
 ```
 
 > The Microsoft Agent Framework Python package is `agent-framework`. Check the current Microsoft Agent Framework docs for exact Foundry provider APIs before replacing the TODO blocks.
+
+## Included data
+
+The repo already includes the fabricated Contoso lab data in [`../data/`](../data/):
+
+- `returns-policy.md`
+- `tone-of-voice.md`
+- `sample-complaints.md`
+- `orders.csv`
+- `past-tickets.csv`
+
+Use these directly for grounding, tests, local deterministic lookups, and workflow validation.
 
 ## Iteration 1 — Grounded Advisor in code
 

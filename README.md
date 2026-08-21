@@ -39,6 +39,20 @@ This lab automates that flow while keeping humans in control of financial and ri
 
 ---
 
+## 📦 Included simulated data
+
+The repo is preloaded with the full fabricated Contoso Data Pack in [`data/`](./data/):
+
+- [`returns-policy.md`](./data/returns-policy.md)
+- [`tone-of-voice.md`](./data/tone-of-voice.md)
+- [`sample-complaints.md`](./data/sample-complaints.md)
+- [`orders.csv`](./data/orders.csv)
+- [`past-tickets.csv`](./data/past-tickets.csv)
+
+You can use these files directly in the Foundry portal and in the pro-code implementation. No copy-paste from the lab markdown is required.
+
+---
+
 ## 🚦 Lab journey
 
 | Step | Track | What you build | Start here |
@@ -98,7 +112,12 @@ You add order lookup, similar-ticket history, a resolution decision agent, fan-o
 ├── README.md
 ├── LAB-contoso-agent-workflow_Version3.md
 ├── data/
-│   └── README.md
+│   ├── README.md
+│   ├── returns-policy.md
+│   ├── tone-of-voice.md
+│   ├── sample-complaints.md
+│   ├── orders.csv
+│   └── past-tickets.csv
 └── pro-code/
     ├── START-HERE.md
     ├── README.md
@@ -115,7 +134,7 @@ You add order lookup, similar-ticket history, a resolution decision agent, fan-o
 ## ▶️ How to use this repo
 
 1. Start with the no-code lab: [`LAB-contoso-agent-workflow_Version3.md`](./LAB-contoso-agent-workflow_Version3.md).
-2. Copy the Data Pack from the lab into [`data/`](./data/).
+2. Use the preloaded Data Pack from [`data/`](./data/) when creating Foundry portal knowledge sources and running tests.
 3. Build Iterations 1, 2, and 3 in the Microsoft Foundry portal.
 4. Move to the pro-code guide: [`pro-code/START-HERE.md`](./pro-code/START-HERE.md).
 5. Implement the same agents, prompts, contracts, tests, and workflow logic using Microsoft Agent Framework.

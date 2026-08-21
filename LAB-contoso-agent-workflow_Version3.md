@@ -4,12 +4,24 @@
 
 This is the no-code Foundry portal half of the lab. The repository currently maintains **Iterations 1, 2, and 3** for this exercise.
 
-> The full workshop handout should live in this file. The pro-code half in [`pro-code/START-HERE.md`](./pro-code/START-HERE.md) mirrors the same iterations, agents, data, and tests.
+> The pro-code half in [`pro-code/START-HERE.md`](./pro-code/START-HERE.md) mirrors the same iterations, agents, data, and tests.
 
 ## Two-step exercise
 
 1. **No-code first:** build the system in the Microsoft Foundry portal following this lab.
 2. **Pro-code second:** build the same system on Foundry-hosted agents using Microsoft Agent Framework.
+
+## Preloaded Data Pack
+
+The simulated data is already available in [`data/`](./data/):
+
+- [`returns-policy.md`](./data/returns-policy.md)
+- [`tone-of-voice.md`](./data/tone-of-voice.md)
+- [`sample-complaints.md`](./data/sample-complaints.md)
+- [`orders.csv`](./data/orders.csv)
+- [`past-tickets.csv`](./data/past-tickets.csv)
+
+Use these files directly when uploading knowledge to Foundry portal agents or running the pro-code version.
 
 ---
 
@@ -31,8 +43,8 @@ Create a single `Complaint Advisor` agent that a support rep can paste a complai
 3. Model: large model deployment, for example `gpt-4o`.
 4. Instructions: copy `Complaint Advisor` from the lab prompt pack.
 5. Knowledge: upload:
-   - `returns-policy.md`
-   - `tone-of-voice.md`
+   - `data/returns-policy.md`
+   - `data/tone-of-voice.md`
 6. Test in the playground.
 
 ## Gate 1
@@ -61,8 +73,8 @@ complaintText -> Intake Agent -> Policy Agent -> Response Writer Agent -> finalR
 | Agent | Model | Knowledge | Purpose |
 |---|---|---|---|
 | `Intake Agent` | small | none | classify complaint and extract order ID |
-| `Policy Agent` | small | `returns-policy.md` | decide what the policy permits |
-| `Response Writer Agent` | large | `tone-of-voice.md` | draft final customer reply |
+| `Policy Agent` | small | `data/returns-policy.md` | decide what the policy permits |
+| `Response Writer Agent` | large | `data/tone-of-voice.md` | draft final customer reply |
 
 ## Workflow variables
 
@@ -106,11 +118,11 @@ Resolution
 | Agent | Model | Knowledge | Purpose |
 |---|---|---|---|
 | `Intake Agent` | small | none | classify and extract |
-| `Order Lookup Agent` | small | `orders.csv` | retrieve order facts only |
-| `Policy Agent` | small | `returns-policy.md` | determine permitted remedy |
-| `History Agent` | small | `past-tickets.csv` | find similar resolved cases |
+| `Order Lookup Agent` | small | `data/orders.csv` | retrieve order facts only |
+| `Policy Agent` | small | `data/returns-policy.md` | determine permitted remedy |
+| `History Agent` | small | `data/past-tickets.csv` | find similar resolved cases |
 | `Resolution Agent` | large | none | recommend action and approval flag |
-| `Response Writer Agent` | large | `tone-of-voice.md` | write final reply |
+| `Response Writer Agent` | large | `data/tone-of-voice.md` | write final reply |
 
 ## Parallel fan-out
 
@@ -142,16 +154,6 @@ The workflow must:
 - produce a customer reply that never mentions internal agents, clauses, or approval steps.
 
 ---
-
-# Data Pack files
-
-Copy the data pack into [`data/`](./data/):
-
-- `returns-policy.md`
-- `tone-of-voice.md`
-- `sample-complaints.md`
-- `orders.csv`
-- `past-tickets.csv`
 
 # Prompt Pack
 
