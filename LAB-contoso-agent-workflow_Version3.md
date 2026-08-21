@@ -6,14 +6,32 @@ This is the no-code Foundry portal half of the lab. The repository currently mai
 
 > The pro-code half in [`pro-code/START-HERE.md`](./pro-code/START-HERE.md) mirrors the same iterations, agents, data, and tests.
 
+## Lab contents
+
+- [Two-step exercise](#two-step-exercise)
+- [Preloaded Data Pack](#preloaded-data-pack)
+- [Iteration 1 — The Grounded Advisor](#iteration-1--the-grounded-advisor)
+  - [Iteration 1 portal build](#iteration-1-portal-build)
+  - [Gate 1](#gate-1)
+- [Iteration 2 — The First Workflow](#iteration-2--the-first-workflow)
+  - [Iteration 2 agents](#iteration-2-agents)
+  - [Iteration 2 workflow variables](#iteration-2-workflow-variables)
+  - [Gate 2](#gate-2)
+- [Iteration 3 — The Full System](#iteration-3--the-full-system)
+  - [Iteration 3 agents](#iteration-3-agents)
+  - [Parallel fan-out](#parallel-fan-out)
+  - [Human approval routing](#human-approval-routing)
+  - [Gate 3](#gate-3)
+- [Prompt Pack](#prompt-pack)
+
 ## Two-step exercise
 
 1. **No-code first:** build the system in the Microsoft Foundry portal following this lab.
-2. **Pro-code second:** build the same system on Foundry-hosted agents using Microsoft Agent Framework.
+2. **Pro-code second:** build the same system on Foundry-hosted agents using Microsoft Agent Framework by following [`pro-code/START-HERE.md`](./pro-code/START-HERE.md).
 
 ## Preloaded Data Pack
 
-The simulated data is already available in [`data/`](./data/):
+The simulated data is already available in [`data/`](./data/). See the [data folder guide](./data/README.md) for the full list.
 
 - [`returns-policy.md`](./data/returns-policy.md)
 - [`tone-of-voice.md`](./data/tone-of-voice.md)
@@ -21,7 +39,7 @@ The simulated data is already available in [`data/`](./data/):
 - [`orders.csv`](./data/orders.csv)
 - [`past-tickets.csv`](./data/past-tickets.csv)
 
-Use these files directly when uploading knowledge to Foundry portal agents or running the pro-code version.
+Use these files directly when uploading knowledge to Foundry portal agents or running the [pro-code version](./pro-code/START-HERE.md).
 
 ---
 
@@ -36,25 +54,25 @@ Create a single `Complaint Advisor` agent that a support rep can paste a complai
 - whether manager approval is required,
 - what customer-facing reply should be sent.
 
-## Portal build
+## Iteration 1 portal build
 
 1. Agents → **+ New agent**.
 2. Name: `Complaint Advisor`.
 3. Model: large model deployment, for example `gpt-4o`.
-4. Instructions: copy `Complaint Advisor` from the lab prompt pack.
+4. Instructions: use the [`complaint_advisor.md`](./pro-code/prompts/complaint_advisor.md) prompt placeholder, populated from the original lab prompt pack.
 5. Knowledge: upload:
-   - `data/returns-policy.md`
-   - `data/tone-of-voice.md`
-6. Test in the playground.
+   - [`data/returns-policy.md`](./data/returns-policy.md)
+   - [`data/tone-of-voice.md`](./data/tone-of-voice.md)
+6. Test in the playground with [`data/sample-complaints.md`](./data/sample-complaints.md).
 
 ## Gate 1
 
 The agent must:
 
-- answer from the policy document and cite real clause numbers,
+- answer from the [policy document](./data/returns-policy.md) and cite real clause numbers,
 - return `POLICY_UNCLEAR` when the policy is silent,
-- ignore prompt-injection attempts in the complaint text,
-- produce a 120–180 word reply that follows the tone guide.
+- ignore prompt-injection attempts in the [sample complaints](./data/sample-complaints.md),
+- produce a 120–180 word reply that follows the [tone guide](./data/tone-of-voice.md).
 
 ---
 
@@ -68,15 +86,15 @@ Split the single agent into three specialist agents and chain them in a workflow
 complaintText -> Intake Agent -> Policy Agent -> Response Writer Agent -> finalReply
 ```
 
-## Agents
+## Iteration 2 agents
 
-| Agent | Model | Knowledge | Purpose |
-|---|---|---|---|
-| `Intake Agent` | small | none | classify complaint and extract order ID |
-| `Policy Agent` | small | `data/returns-policy.md` | decide what the policy permits |
-| `Response Writer Agent` | large | `data/tone-of-voice.md` | draft final customer reply |
+| Agent | Model | Knowledge | Prompt | Purpose |
+|---|---|---|---|---|
+| `Intake Agent` | small | none | [`intake_agent.md`](./pro-code/prompts/intake_agent.md) | classify complaint and extract order ID |
+| `Policy Agent` | small | [`data/returns-policy.md`](./data/returns-policy.md) | [`policy_agent.md`](./pro-code/prompts/policy_agent.md) | decide what the policy permits |
+| `Response Writer Agent` | large | [`data/tone-of-voice.md`](./data/tone-of-voice.md) | [`response_writer_agent.md`](./pro-code/prompts/response_writer_agent.md) | draft final customer reply |
 
-## Workflow variables
+## Iteration 2 workflow variables
 
 | Variable | Type | Written by |
 |---|---|---|
@@ -89,7 +107,7 @@ complaintText -> Intake Agent -> Policy Agent -> Response Writer Agent -> finalR
 
 The workflow must:
 
-- run end-to-end on complaints 1, 2, 3, and 6,
+- run end-to-end on complaints 1, 2, 3, and 6 from [`data/sample-complaints.md`](./data/sample-complaints.md),
 - pass clean JSON between agents,
 - isolate policy logic from response writing,
 - be explainable from the YAML view.
@@ -113,24 +131,24 @@ Resolution
   └─ Response Writer
 ```
 
-## Agents
+## Iteration 3 agents
 
-| Agent | Model | Knowledge | Purpose |
-|---|---|---|---|
-| `Intake Agent` | small | none | classify and extract |
-| `Order Lookup Agent` | small | `data/orders.csv` | retrieve order facts only |
-| `Policy Agent` | small | `data/returns-policy.md` | determine permitted remedy |
-| `History Agent` | small | `data/past-tickets.csv` | find similar resolved cases |
-| `Resolution Agent` | large | none | recommend action and approval flag |
-| `Response Writer Agent` | large | `data/tone-of-voice.md` | write final reply |
+| Agent | Model | Knowledge | Prompt | Purpose |
+|---|---|---|---|---|
+| `Intake Agent` | small | none | [`intake_agent.md`](./pro-code/prompts/intake_agent.md) | classify and extract |
+| `Order Lookup Agent` | small | [`data/orders.csv`](./data/orders.csv) | [`order_lookup_agent.md`](./pro-code/prompts/order_lookup_agent.md) | retrieve order facts only |
+| `Policy Agent` | small | [`data/returns-policy.md`](./data/returns-policy.md) | [`policy_agent.md`](./pro-code/prompts/policy_agent.md) | determine permitted remedy |
+| `History Agent` | small | [`data/past-tickets.csv`](./data/past-tickets.csv) | [`history_agent.md`](./pro-code/prompts/history_agent.md) | find similar resolved cases |
+| `Resolution Agent` | large | none | [`resolution_agent.md`](./pro-code/prompts/resolution_agent.md) | recommend action and approval flag |
+| `Response Writer Agent` | large | [`data/tone-of-voice.md`](./data/tone-of-voice.md) | [`response_writer_agent.md`](./pro-code/prompts/response_writer_agent.md) | write final reply |
 
 ## Parallel fan-out
 
 After Intake, connect the same Intake output to all three lookup branches:
 
-- Order Lookup
-- Policy
-- History
+- Order Lookup, grounded in [`data/orders.csv`](./data/orders.csv)
+- Policy, grounded in [`data/returns-policy.md`](./data/returns-policy.md)
+- History, grounded in [`data/past-tickets.csv`](./data/past-tickets.csv)
 
 Do **not** chain them. They should overlap in the trace.
 
@@ -149,12 +167,22 @@ The workflow must:
 
 - run six single-purpose agents,
 - execute Order Lookup, Policy, and History concurrently,
-- halt at the Human node for complaint 2 and complaint 4,
-- avoid refunding missing or fabricated orders,
+- halt at the Human node for complaint 2 and complaint 4 from [`data/sample-complaints.md`](./data/sample-complaints.md),
+- avoid refunding missing or fabricated orders from [`data/orders.csv`](./data/orders.csv),
 - produce a customer reply that never mentions internal agents, clauses, or approval steps.
 
 ---
 
 # Prompt Pack
 
-Copy the agent instructions from the original lab handout into [`pro-code/prompts/`](./pro-code/prompts/) so the portal and pro-code versions use the same prompts.
+The portal lab and pro-code lab should use the same prompt text. Prompt placeholders live in [`pro-code/prompts/`](./pro-code/prompts/):
+
+- [`complaint_advisor.md`](./pro-code/prompts/complaint_advisor.md)
+- [`intake_agent.md`](./pro-code/prompts/intake_agent.md)
+- [`policy_agent.md`](./pro-code/prompts/policy_agent.md)
+- [`response_writer_agent.md`](./pro-code/prompts/response_writer_agent.md)
+- [`order_lookup_agent.md`](./pro-code/prompts/order_lookup_agent.md)
+- [`history_agent.md`](./pro-code/prompts/history_agent.md)
+- [`resolution_agent.md`](./pro-code/prompts/resolution_agent.md)
+
+For the code-first version, continue with [`pro-code/START-HERE.md`](./pro-code/START-HERE.md).

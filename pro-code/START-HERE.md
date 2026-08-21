@@ -2,21 +2,31 @@
 
 This is the starting point for rebuilding the same Contoso complaint-resolution system in code using **Microsoft Agent Framework** with Foundry-hosted agents.
 
-The goal is not to create a different application. The goal is to reproduce the no-code Foundry portal lab in code so learners can compare:
+The goal is not to create a different application. The goal is to reproduce the [no-code Foundry portal lab](../LAB-contoso-agent-workflow_Version3.md) in code so learners can compare:
 
 - portal-built agents vs code-built agents,
 - visual workflow designer vs code orchestration,
 - manual node mapping vs typed contracts,
 - portal trace vs local logs/tests.
 
+## Contents
+
+- [Prerequisites](#prerequisites)
+- [Included data](#included-data)
+- [Iteration 1 — Grounded Advisor in code](#iteration-1--grounded-advisor-in-code)
+- [Iteration 2 — First Workflow in code](#iteration-2--first-workflow-in-code)
+- [Iteration 3 — Full System in code](#iteration-3--full-system-in-code)
+- [Testing contracts](#testing-contracts)
+- [Build rule](#build-rule)
+
 ## Prerequisites
 
 - Python 3.11+ or 3.12+
 - Access to a Microsoft Foundry project
-- Deployed models matching the lab:
+- Deployed models matching the [portal lab setup](../LAB-contoso-agent-workflow_Version3.md#two-step-exercise):
   - small/fast model, for example `gpt-4o-mini`
   - large/judgement model, for example `gpt-4o`
-- The preloaded simulated Data Pack in `../data/`
+- The preloaded simulated Data Pack in [`../data/`](../data/)
 
 Install dependencies:
 
@@ -39,19 +49,19 @@ cp .env.example .env
 
 ## Included data
 
-The repo already includes the fabricated Contoso lab data in [`../data/`](../data/):
+The repo already includes the fabricated Contoso lab data in [`../data/`](../data/). See [`../data/README.md`](../data/README.md) for file-by-file usage.
 
-- `returns-policy.md`
-- `tone-of-voice.md`
-- `sample-complaints.md`
-- `orders.csv`
-- `past-tickets.csv`
+- [`returns-policy.md`](../data/returns-policy.md)
+- [`tone-of-voice.md`](../data/tone-of-voice.md)
+- [`sample-complaints.md`](../data/sample-complaints.md)
+- [`orders.csv`](../data/orders.csv)
+- [`past-tickets.csv`](../data/past-tickets.csv)
 
 Use these directly for grounding, tests, local deterministic lookups, and workflow validation.
 
 ## Iteration 1 — Grounded Advisor in code
 
-Portal equivalent: one `Complaint Advisor` agent.
+Portal equivalent: [Iteration 1 — The Grounded Advisor](../LAB-contoso-agent-workflow_Version3.md#iteration-1--the-grounded-advisor).
 
 Code entry point:
 
@@ -63,15 +73,15 @@ Prompt file:
 
 Data files:
 
-- `../data/returns-policy.md`
-- `../data/tone-of-voice.md`
-- `../data/sample-complaints.md`
+- [`../data/returns-policy.md`](../data/returns-policy.md)
+- [`../data/tone-of-voice.md`](../data/tone-of-voice.md)
+- [`../data/sample-complaints.md`](../data/sample-complaints.md)
 
 What to write:
 
 1. Create one Foundry-backed Agent Framework agent using the large model.
-2. Load the two knowledge files or inject their contents into the retrieval/grounding setup supported by your Foundry-hosted agent configuration.
-3. Send one complaint at a time.
+2. Load the [returns policy](../data/returns-policy.md) and [tone guide](../data/tone-of-voice.md), or inject their contents into the retrieval/grounding setup supported by your Foundry-hosted agent configuration.
+3. Send one complaint at a time from [`sample-complaints.md`](../data/sample-complaints.md).
 4. Assert that the response includes:
    - `STEP 1 — UNDERSTAND`,
    - `STEP 2 — POLICY VERDICT`,
@@ -87,7 +97,7 @@ python -m contoso_lab.main iteration1 --complaint 1
 
 ## Iteration 2 — First Workflow in code
 
-Portal equivalent:
+Portal equivalent: [Iteration 2 — The First Workflow](../LAB-contoso-agent-workflow_Version3.md#iteration-2--the-first-workflow).
 
 ```text
 Start -> Intake -> Policy -> Response Writer -> Output
@@ -105,11 +115,11 @@ Prompt files:
 
 What to write:
 
-1. Implement `run_intake(complaint_text)`.
+1. Implement `run_intake(complaint_text)` in [`iteration2_first_workflow.py`](./src/contoso_lab/iteration2_first_workflow.py).
 2. Validate the Intake output against `IntakeResult` in [`models.py`](./src/contoso_lab/models.py).
-3. Implement `run_policy(intake)`.
-4. Validate the Policy output against `PolicyFinding`.
-5. Implement `run_response_writer(intake, policy_finding)`.
+3. Implement `run_policy(intake)` in [`iteration2_first_workflow.py`](./src/contoso_lab/iteration2_first_workflow.py).
+4. Validate the Policy output against `PolicyFinding` in [`models.py`](./src/contoso_lab/models.py).
+5. Implement `run_response_writer(intake, policy_finding)` in [`iteration2_first_workflow.py`](./src/contoso_lab/iteration2_first_workflow.py).
 6. Return `finalReply` as plain text.
 
 Run:
@@ -122,7 +132,7 @@ python -m contoso_lab.main iteration2 --complaint 3
 
 ## Iteration 3 — Full System in code
 
-Portal equivalent:
+Portal equivalent: [Iteration 3 — The Full System](../LAB-contoso-agent-workflow_Version3.md#iteration-3--the-full-system).
 
 ```text
 Intake
@@ -147,11 +157,11 @@ Additional prompt files:
 
 What to write:
 
-1. Reuse Intake from Iteration 2.
+1. Reuse Intake from [Iteration 2](#iteration-2--first-workflow-in-code).
 2. Run Order Lookup, Policy, and History concurrently after Intake.
    - In Python, this usually means `asyncio.gather(...)`.
    - In Microsoft Agent Framework, use the framework's concurrent workflow pattern if available in the current SDK.
-3. Validate outputs against:
+3. Validate outputs against contracts in [`models.py`](./src/contoso_lab/models.py):
    - `OrderDetails`,
    - `PolicyFinding`,
    - `HistoryFinding`.
@@ -180,7 +190,7 @@ Start with contract tests before calling live models:
 pytest
 ```
 
-The tests focus on stable lab requirements:
+The tests in [`src/tests/test_contracts.py`](./src/tests/test_contracts.py) focus on stable lab requirements:
 
 - JSON outputs parse correctly,
 - high-value refunds require approval,
@@ -191,8 +201,8 @@ The tests focus on stable lab requirements:
 
 When a test fails, change the smallest possible unit:
 
-- bad category or missing order ID -> Intake prompt/code,
-- invented order -> Order Lookup prompt/code,
-- wrong remedy -> Policy prompt/code,
-- bad approval route -> Resolution or routing condition,
-- wrong tone -> Response Writer prompt.
+- bad category or missing order ID -> [`Intake Agent`](./prompts/intake_agent.md) prompt/code,
+- invented order -> [`Order Lookup Agent`](./prompts/order_lookup_agent.md) prompt/code,
+- wrong remedy -> [`Policy Agent`](./prompts/policy_agent.md) prompt/code,
+- bad approval route -> [`Resolution Agent`](./prompts/resolution_agent.md) or routing condition in [`iteration3_full_system.py`](./src/contoso_lab/iteration3_full_system.py),
+- wrong tone -> [`Response Writer Agent`](./prompts/response_writer_agent.md).
